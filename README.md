@@ -59,7 +59,8 @@ series2017 %>%
 
 ### Realizacja
 
-Projekt można realizować w grupie od 1 do 4 osób. Wszystkie osoby w zespole otrzymują tą samą ocenę.
+Projekt można realizować w grupie od 1 do 4 osób. Wszystkie osoby w zespole otrzymują tę samą liczbę punktów.
+Na końcowy wynik wpływ ma projakt 1 z wagą 34% i projekt 2 z wagą 66%.
 
 Projekt oceniany będzie w trzech aspektach:
 
