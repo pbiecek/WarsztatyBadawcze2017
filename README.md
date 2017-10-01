@@ -56,3 +56,17 @@ series2017 %>%
   mutate(id = seq_along(Serie)) %>%
   ungroup() -> series2017
 ```
+
+### Realizacja
+
+Projekt można realizować w grupie od 1 do 4 osób. Wszystkie osoby w zespole otrzymują tą samą ocenę.
+
+Projekt oceniany będzie w trzech aspektach:
+
+- Jakość kodu (czytelność, komentarze, dokumentacja),
+- Jakość prezentacji opisującej wynik
+- Jakość wyniku (UX, czytelność)
+
+Każdy zespół powinien mieć nazwę. Wyniki należy umieszczać w katalogu 
+https://github.com/pbiecek/WarsztatyBadawcze2017/tree/master/Projekty
+
