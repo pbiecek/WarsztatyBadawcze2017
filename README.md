@@ -83,9 +83,9 @@ Projekt oceniany będzie w trzech aspektach:
 Każdy zespół powinien mieć nazwę. Wyniki należy umieszczać w katalogu 
 https://github.com/pbiecek/WarsztatyBadawcze2017/tree/master/Projekty
 
-- 2 X - Omówienie celu projektu
-- 9 X - Dyskusja pobranych danych i wyników wstępnych badań literaturowych
-- 16 X - Pierwsza prezentacja wyników
-- 23 X - Przygotowanie podsumowania uzyskanych wyników i użytej metodologii
-- 30 X - Finalna prezentacja
+- 9 X - Omówienie celu projektu
+- 16 X - Dyskusja pobranych danych i wyników wstępnych badań literaturowych
+- 23 X - Pierwsza prezentacja wyników
+- 30 X - Przygotowanie podsumowania uzyskanych wyników i użytej metodologii
+- 6 XI - Finalna prezentacja
 
