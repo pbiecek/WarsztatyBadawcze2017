@@ -19,9 +19,15 @@ Celem naszych zajęć jest praca nad kompetencjami, ważnymi w pracy badawczej, 
 
 Analiza treści i ocen wybranego serialu (np. Game of Thrones)
 
+Pytania szczegółowe (wybierz jedno):
+
+* Jak wyglądają interakcje pomiędzy bohaterami serialu?
+* Jakie emocje dominują w których częściach serialu/których bohaterach?
+* Czym różnią się wypowiedzi (złożoność języka) głównych bohaterów?
+
 ### Materiały
 
-- Liczba głosów i średnia ocena z zbazy IMDB http://www.imdb.com/chart/toptv/
+- Liczba głosów i średnia ocena z bazy IMDB http://www.imdb.com/chart/toptv/
 - Przykładowe treści napisów dla GoT https://www.opensubtitles.org/pl/ssearch/sublanguageid-pol/idmovie-63130
 - Wprowadzenie do TextMining http://tidytextmining.com/ https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html
 - Wprowadzenie do analizy wydźwięku/sentymentu http://tidytextmining.com/sentiment.html
@@ -60,19 +66,26 @@ series2017 %>%
 ### Realizacja
 
 Projekt można realizować w grupie od 1 do 4 osób. Wszystkie osoby w zespole otrzymują tę samą liczbę punktów.
-Na końcowy wynik wpływ ma projakt 1 z wagą 34% i projekt 2 z wagą 66%.
+Na końcowy wynik wpływ ma projekt 1 z wagą 34% i projekt 2 z wagą 66%.
+
+W ramach prac należy przeprowadzić trzy etapy:
+
+- reaserch, czyli badania literaturowe. Poszukać podobnych rozwiązań. Wybrać konkretny problem do rozwiązania.
+- wykonanie. Zaplanowaną pracę trzeba wykonać.
+- opis i dokumentacja. Jakich metod użyliśmy.
 
 Projekt oceniany będzie w trzech aspektach:
 
-- Jakość kodu (czytelność, komentarze, dokumentacja),
-- Jakość prezentacji opisującej wynik
-- Jakość wyniku (UX, czytelność)
+- Głębokość researchu (czy udało się znaleźć podobne rozwiązania, gdzie, ile)
+- Jakość opracowanego rozwiązania (UX, czytelność)
+- Jakość i kompletność opisu wyniku
 
 Każdy zespół powinien mieć nazwę. Wyniki należy umieszczać w katalogu 
 https://github.com/pbiecek/WarsztatyBadawcze2017/tree/master/Projekty
 
 - 2 X - Omówienie celu projektu
-- 9 X - Dyskusja pobranych danych
-- 16 X - Pierwsza prezentacja
-- 23 X - Wprowadzanie zaplanowanych zmian
+- 9 X - Dyskusja pobranych danych i wyników wstępnych badań literaturowych
+- 16 X - Pierwsza prezentacja wyników
+- 23 X - Przygotowanie podsumowania uzyskanych wyników i użytej metodologii
 - 30 X - Finalna prezentacja
+
