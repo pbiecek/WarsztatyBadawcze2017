@@ -12,80 +12,42 @@ Celem naszych zajęć jest praca nad kompetencjami, ważnymi w pracy badawczej, 
 
 - Iteracyjna praca z danymi
 - Praca w zespole
-- Produktyzacja rozwiązań
-- Opisywanie uzyskanych rozwiązań
+- Komunikowanie uzyskanych rozwiązań 
+- Dokumentowanie uzyskanych rozwiązań
+
+## Struktura zajęć
+
+Zajęcia składać się będą z dwóch projektów, indywidualnego i zespołowego.
+
+Projekt indywidualny będzie krótszy, wykonywany na sztucznych danych.
+
+Projekt zespołowy wykonywany będzie w oparciu o rzeczywiste dane, wykonywany będzie przy współpracy z firmą mFind.
 
 ## Projekt 1
 
-Analiza treści i ocen wybranego serialu (np. Game of Thrones)
+Projekt 1 to zagadnienie predykcji. Modelowanie predykcyjne można wykonać na wiele sposobów. Zobaczmy który zadziała najlepiej.
 
-Pytania szczegółowe (wybierz jedno):
+Wygenerowałem 50 zmiennych niezależnych o nazwach od A1 do X2 i jedną zmienną zależną y - odpowiedź binarną, zmienną przyjmującą wartość 'klasa -' / 'klasa +'. 
 
-* Jak wyglądają interakcje pomiędzy bohaterami serialu?
-* Jakie emocje dominują w których częściach serialu/których bohaterach?
-* Czym różnią się wypowiedzi (złożoność języka) głównych bohaterów?
+Zadanie polega na:
 
-### Materiały
+1) odkryciu zależności pomiędzy zmiennymi X a zmienną y,
+2) zbudowaniu modelu probabilistycznego, określającego dla jakich wartości X bardziej prawdopodobne jest zaobserwowanie 'klasy +'
+3) określenie rankingu dla testowych 50 000 obserwacji. Rankingu odzwierciedlającego przekonanie, że dana obserwacja miała `klasę +`.
 
-- Liczba głosów i średnia ocena z bazy IMDB http://www.imdb.com/chart/toptv/
-- Przykładowe treści napisów dla GoT https://www.opensubtitles.org/pl/ssearch/sublanguageid-pol/idmovie-63130
-- Wprowadzenie do TextMining http://tidytextmining.com/ https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html
-- Wprowadzenie do analizy wydźwięku/sentymentu http://tidytextmining.com/sentiment.html
-- Skrypt pobierający dane ze strony IMDB
+### Terminy projektu 1
 
-```
-## scrap the data from IMDB database
+* 9 X - Omówienie projektu
+* 16 X - Oddanie rankingów oraz ich opisów, wybranie recenzentów
+* 23 X - Oddanie recenzji oraz porównanie wyników.
 
-library(rvest)
-library(dplyr)
 
-# read links and titles 
-page <- read_html("http://www.imdb.com/chart/toptv/")
-series <- html_nodes(page, ".titleColumn a")
-titles <- html_text(series)
-links <- html_attr(series, "href")
-codes <- sapply(strsplit(links, split = "/"), `[`, 3)
+Na zajęciach 16 X będziemy wysyłać rozwiązania oraz dobierać recenzentów.
+Rozwiązaniem jest: 
 
-# read details for series
-allSeries <- lapply(seq_along(codes), function(i) {
-  tab <- read_html(paste0("http://www.imdb.com/title/",codes[i],"/epdate?ref_=ttep_ql_4")) %>%
-    html_node("table") %>%
-    html_table()
-  data.frame(Serie = titles[i], tab[,1:4], Season = gsub(tab[,1], pattern="\\..*", replacement=""))
-})
+* plik o nazwie imie_nazwisko.txt zawierający dane jak w pliku `zbior_testowy.txt` z dodatkową pierwszą kolumną o nazwie `score`. 
+Oceniając rozwiązania, wezmę 10000 wierszy o najwyższym score i sprawdzę dla ilu z nich w moim modelu przypisana była `klasa +`.
+* plik imie_nazwisko.pdf opisujący użyty model. Plik nie powinien mieć więcej niż 4 strony. Powinien zawierać wszystkie najważniejsze informacje o wykonanym modelu.
 
-# put all together
-series2017 <- do.call(rbind, allSeries)
-series2017$UserVotes <- as.numeric(gsub(series2017$UserVotes, pattern = "[^0-9]", replacement = ""))
-series2017 %>% 
-  group_by(Serie) %>%
-  mutate(id = seq_along(Serie)) %>%
-  ungroup() -> series2017
-```
-
-### Realizacja
-
-Projekt można realizować w grupie od 1 do 4 osób. Wszystkie osoby w zespole otrzymują tę samą liczbę punktów.
-Na końcowy wynik wpływ ma projekt 1 z wagą 34% i projekt 2 z wagą 66%.
-
-W ramach prac należy przeprowadzić trzy etapy:
-
-- reaserch, czyli badania literaturowe. Poszukać podobnych rozwiązań. Wybrać konkretny problem do rozwiązania.
-- wykonanie. Zaplanowaną pracę trzeba wykonać.
-- opis i dokumentacja. Jakich metod użyliśmy.
-
-Projekt oceniany będzie w trzech aspektach:
-
-- Głębokość researchu (czy udało się znaleźć podobne rozwiązania, gdzie, ile)
-- Jakość opracowanego rozwiązania (UX, czytelność)
-- Jakość i kompletność opisu wyniku
-
-Każdy zespół powinien mieć nazwę. Wyniki należy umieszczać w katalogu 
-https://github.com/pbiecek/WarsztatyBadawcze2017/tree/master/Projekty
-
-- 9 X - Omówienie celu projektu
-- 16 X - Dyskusja pobranych danych i wyników wstępnych badań literaturowych
-- 23 X - Pierwsza prezentacja wyników
-- 30 X - Przygotowanie podsumowania uzyskanych wyników i użytej metodologii
-- 6 XI - Finalna prezentacja
+Na zajęciach 23 X będziemy omawiać recenzje projektów (peer-review).
 
