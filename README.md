@@ -29,11 +29,21 @@ Projekt 1 to zagadnienie predykcji. Modelowanie predykcyjne można wykonać na w
 
 Wygenerowałem 50 zmiennych niezależnych o nazwach od A1 do X2 i jedną zmienną zależną y - odpowiedź binarną, zmienną przyjmującą wartość 'klasa -' / 'klasa +'. 
 
-Zadanie polega na:
+### Zadanie polega na
 
 1) odkryciu zależności pomiędzy zmiennymi X a zmienną y,
 2) zbudowaniu modelu probabilistycznego, określającego dla jakich wartości X bardziej prawdopodobne jest zaobserwowanie 'klasy +'
 3) określenie rankingu dla testowych 50 000 obserwacji. Rankingu odzwierciedlającego przekonanie, że dana obserwacja miała `klasę +`.
+
+### Dane
+
+Zbiór danych uczących (51 kolumn):
+https://github.com/pbiecek/WarsztatyBadawcze2017/blob/master/Projekty/zbior_uczacy.txt
+
+Zbiór danych testowych (50 kolumn):
+https://github.com/pbiecek/WarsztatyBadawcze2017/blob/master/Projekty/zbior_testowy.txt
+
+Jako rozwiązanie wyślij na GitHub `zbior_testowy` uzupełniony o kolumnę `score`.
 
 ### Terminy projektu 1
 
