@@ -1,0 +1,138 @@
+---
+title: "Projekt 1"
+author: "Kamil Romaszko"
+date: "14 października 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gbm)
+library(glmnet)
+library(randomForest)
+library(caret)
+library(xgboost)
+library(dplyr)
+library(tidyr)
+library(reshape)
+library(DiagrammeR)
+```
+
+```{r echo=FALSE}
+set.seed(7)
+data_train <- read.csv("zbior_uczacy.txt", header=TRUE, sep=";")
+k <- 5
+```
+
+## Analiza zmiennych
+Analizowane dane zawierają 50 zmiennych niezależnych oraz 1 zmienną zależną od reszty - informację o przynależności do klasy "+" lub "-". Co ważne, klasy są zrównoważone. Moim pierwszym krokiem była selekcja najbadziej istotnych zmiennych objaśniających. W tym celu użyłem metody drzew losowych oraz fukncji _importance_ wywołanej na wygenerowanym modelu. Zaletą użytej metody jest to, że jest ona w stanie wykryć nieliniowe zależności pomiędzy zmiennymi.
+
+```{r cache=TRUE}
+randomForest_fit <- randomForest(y~., data=data_train)
+varImpPlot(randomForest_fit)
+
+importance_fit <- importance(randomForest_fit)
+```
+
+Powyższy wykres przedstawia istotność zmiennych. Na jego podstawie możemy stwierdzić, że tylko kilka pierwszych zmiennych jest istotna. Możemy zatem uprościć dane - ja do dalszych rozważać wybrałem 10 najbardziej istotnych zmiennych.
+
+
+```{r echo=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+plot(y~M1,data_train)
+plot(y~W1,data_train)
+```
+Powyższy wykres przedstawia zależność zmiennej objaśnienaj od najistotniejszej zmiennych "_M1_" i "_W1_". Widać, że zależność nie jest liniowa.
+
+
+\newpage
+## Testowanie modeli
+
+Po analizie danych przetestowałem, które metody najlepiej się sprawdzają. Aby przetestować wybrane metody, dane podzieliłem na zbiór treningowy i testowy w stosunku 4:1. 
+
+Każdy model wyznacza prawdopodobieństwo przynależności do klasy "+". Do oceny modelu, dokonujemy predykcji na zbiorze testowym, a następnie wybieramy 20% najabrdziej prawdopodobnych obserwacji i mierzymy procent obserwacji, które faktycznie należą do klasy "+". Im więcej poprawnie przydzielonych obserwacji tym lepiej.
+
+```{r echo=FALSE}
+slices <- createFolds(data_train$y, k=5)
+train <- data_train[unlist(slices[-1]),]
+test <- data_train[unlist(slices[1]),]
+
+importance_order <- order(importance_fit, decreasing=TRUE)
+selected_variables <- 1 + importance_order[1:10]
+train_selected <- train[,c(1,selected_variables)]
+test_selected <- test[,c(1,selected_variables)]
+```
+
+## Model xgboost
+
+Wybrana przeze mnie metoda klasyfikacji to eXtreme Gradient Boosting. Polega ona budowaniu sekwencji drzew optymalizowanych na klasyfikacje przypadków z którymi nie radziły sobie wcześniejsze drzewa. Metoda ta, tak jak inne modele oparte na drzewach, dobrze nadaje się do wykrywania nieliniowych zależności, dlatego postanowiłej jej użyć dla zadanego problemu.
+
+Funkcja budująca model posiada jeden wymagany parametr _nround_ który określa maksymalną liczbę iteracji. W moich testach przyjąłem _nround=500_ co daje dostatecznie złożony model, a jednocześnie sprawia, że wyliczany jest on stosunkowo szybko.
+
+Metoda przyjmuje także opcjonalnie parametry od których zależy dokładność modelu. Postanowiłem zbadać jak wpływają one na dokładność. 
+
+_max_depth_ - określa maksymalną głębokość drzewa. Im większa głębokość, tym bardziej złożony będzie model.
+
+_eta_ - określa krzywą uczenia. Stosowany, żeby zapobiegać przeuczeniu modelu. Im mniejszy, tym model będzie bardziej uogólniony.
+
+
+## Dobór parametrów
+
+```{r cache=TRUE, echo=FALSE}
+matrix_train <- data.matrix(train_selected)
+matrix_train[,1] <- matrix_train[,1] - 1
+matrix_test <- data.matrix(test_selected)
+matrix_test[,1] <- matrix_test[,1] - 1
+
+depth <- c(1, 2, 3, 4)
+eta <- seq(0.1, 0.3, 0.05)
+C <- matrix(nrow=length(depth),ncol=length(eta))
+for(i in 1:length(depth)) {
+  for(j in 1:length(eta)) {
+    boost_model <- xgboost(data=matrix_train[,-1], label=matrix_train[,1],objective="binary:logitraw", nrounds = 500,
+                           max_depth=depth[i], eta = eta[j], verbose=0)
+    prob <- predict(boost_model, matrix_test[,-1])
+    ordered_selected <- order(prob, decreasing = TRUE)
+    C[i,j] <- mean(matrix_test[ordered_selected,1][1:nrow(matrix_test)/5])
+  }
+  
+}
+
+colnames(C) <- eta
+
+melted <- melt(C) 
+colnames(melted) <- c("depth", "eta", "precision")
+
+ggplot(melted, aes(eta,depth)) +
+  geom_tile(aes(fill = precision)) + 
+  geom_text(aes(label = round(precision, 3))) +
+  scale_fill_gradient(low = "white", high = "red") + 
+  scale_x_continuous(breaks = melted$eta)
+```
+
+Dla wybranych wartości parametrów wygenerowałem modele oraz wyznaczyłem ich dokładność. Powyższa heatmapa pokazuje zależność jakości modelu od przyjętych parametrów. Na jego podstawie wybrałem _max_depth=1_ oraz _eta=0.15_. Dla tak wybranych parametrów model osiągnął wynik 85.5% co daje najlepszy z uzyskanych wyników. 
+
+## Podsumowanie
+Dla tak wybranych parametrów dokonałem predykcji dla zbioru testowego.
+```{r echo=FALSE}
+data_train <- read.csv("zbior_uczacy.txt", header=TRUE, sep=";")
+data_test <- read.csv("zbior_testowy.txt", header=TRUE, sep=";")
+
+importance_order <- order(importance_fit, decreasing=TRUE)
+selected_variables <- importance_order[1:10]
+train_selected <- data_train[,c(1,1 + selected_variables)]
+test_selected <- data_test[,selected_variables]
+
+matrix_train <- data.matrix(train_selected)
+matrix_train[,1] <- matrix_train[,1] - 1
+matrix_test <- data.matrix(test_selected)
+```
+
+```{r}
+boost_model <- xgboost(data=matrix_train[,-1], label=matrix_train[,1],
+                       objective="binary:logistic", nrounds = 500,
+                       max_depth=1, eta = 0.15, verbose=0)
+score <- predict(boost_model, matrix_test)
+ordered <- order(score, decreasing = TRUE)
+result <- cbind(data_test, score)
+write.table(result, file = "kamil_romaszko.txt", sep=";")
+```
