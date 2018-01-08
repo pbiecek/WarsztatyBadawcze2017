@@ -61,3 +61,10 @@ Oceniając rozwiązania, wezmę 10000 wierszy o najwyższym score i sprawdzę dl
 
 Na zajęciach 23 X będziemy omawiać recenzje projektów (peer-review).
 
+## Segmentacja
+
+Wybrane materiały przypominające o co chodzi w segmentacji
+
+[MDS](https://pbiecek.gitbooks.io/przewodnik/content/Analiza/beznadzoru/mds.html), [k-średnich](https://pbiecek.gitbooks.io/przewodnik/content/Analiza/beznadzoru/kmeans.html), [pam](https://pbiecek.gitbooks.io/przewodnik/content/Analiza/beznadzoru/pam.html), [agnes](https://pbiecek.gitbooks.io/przewodnik/content/Analiza/beznadzoru/agnes.html)
+
+
